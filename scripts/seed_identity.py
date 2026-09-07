@@ -30,7 +30,7 @@ from datetime import datetime
 from sqlalchemy import select
 
 from nexolu_auth.core.db.entities import Credential, Identity, LinkedAccount
-from nexolu_auth.core.db.session import get_sessionmaker, init_models
+from nexolu_auth.core.db.session import get_engine, get_sessionmaker, init_models
 from nexolu_auth.core.identities import PASSWORD, normalize_email
 from nexolu_auth.core.security.passwords import hash_password
 
@@ -171,10 +171,22 @@ async def seed(email: str, full_name: str, password_hash: str, links: dict[str, 
         print(f"ADMIN_EMAIL={normalized}")
 
 
+async def run(email: str, full_name: str, password_hash: str, links: dict[str, str]) -> None:
+    try:
+        await seed(email, full_name, password_hash, links)
+    finally:
+        # Sin esto, aiomysql cierra su conexion en __del__ cuando el event
+        # loop ya murio y escupe un RuntimeError de varias lineas DESPUES
+        # de haber sembrado bien. Un script de operacion que termina con un
+        # traceback se lee como que fallo, y este se corre justo cuando
+        # menos ganas hay de dudar.
+        await get_engine().dispose()
+
+
 def main() -> None:
     args = parse_args()
     asyncio.run(
-        seed(args.email, args.name, resolve_password_hash(args.password_hash), parse_links(args.link))
+        run(args.email, args.name, resolve_password_hash(args.password_hash), parse_links(args.link))
     )
 
 
