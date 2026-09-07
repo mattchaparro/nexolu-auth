@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Entrar a Nexolu</title>
+  <style>
+    :root { color-scheme: light dark; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #f4f5f7; color: #1f2430; padding: 1.5rem;
+    }
+    .card {
+      width: 100%; max-width: 380px; background: #fff; border-radius: 14px; padding: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+    }
+    h1 { font-size: 1.35rem; margin: 0 0 .25rem; }
+    .sub { margin: 0 0 1.5rem; color: #6b7280; font-size: .9rem; }
+    label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .35rem; }
+    input {
+      width: 100%; padding: .65rem .75rem; margin-bottom: 1rem; font-size: 1rem;
+      border: 1px solid #d1d5db; border-radius: 8px; background: #fff; color: inherit;
+    }
+    input:focus { outline: 2px solid #2563eb; outline-offset: 1px; border-color: transparent; }
+    button {
+      width: 100%; padding: .7rem; font-size: 1rem; font-weight: 600; cursor: pointer;
+      color: #fff; background: #2563eb; border: 0; border-radius: 8px;
+    }
+    button:hover { background: #1d4ed8; }
+    .error {
+      padding: .65rem .75rem; margin-bottom: 1rem; border-radius: 8px; font-size: .875rem;
+      background: #fef2f2; color: #991b1b; border: 1px solid #fecaca;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background: #14161a; color: #e5e7eb; }
+      .card { background: #1c1f26; box-shadow: none; border: 1px solid #2b303a; }
+      .sub { color: #9ca3af; }
+      input { background: #14161a; border-color: #374151; }
+      .error { background: #2a1416; color: #fca5a5; border-color: #7f1d1d; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Entrar a Nexolu</h1>
+    <p class="sub">Continuas hacia {{ product_name }}.</p>
+
+    {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
+
+    <form method="post" action="/login">
+      <input type="hidden" name="product" value="{{ product }}">
+
+      <label for="email">Correo</label>
+      <input id="email" name="email" type="email" value="{{ email or '' }}"
+             autocomplete="username" required autofocus>
+
+      <label for="password">Contrasena</label>
+      <input id="password" name="password" type="password"
+             autocomplete="current-password" required>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </main>
+</body>
+</html>
